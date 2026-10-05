@@ -1,8 +1,9 @@
 package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.Updatable;
 
-public class Tank {
+public class Tank implements Updatable {
 
     private final GridPoint2 coordinates;
     private final GridPoint2 destinationCoordinates;
@@ -17,13 +18,13 @@ public class Tank {
         this.movementDuration = movementDuration;
     }
 
-    public void tryMove(Direction direction, GameField field) {
+    public void tryMove(Direction direction, MovementArea movementArea) {
         if (!isIdle()) {
             return;
         }
 
         GridPoint2 newDestination = direction.nextTileFrom(coordinates);
-        if (field.canMoveTo(newDestination)) {
+        if (movementArea.canMoveTo(newDestination)) {
             destinationCoordinates.set(newDestination);
             movementProgress = 0f;
         }
@@ -31,6 +32,7 @@ public class Tank {
         rotation = direction.getRotation();
     }
 
+    @Override
     public void update(float deltaTime) {
         movementProgress = Math.min(movementProgress + deltaTime / movementDuration, 1f);
         if (isIdle()) {

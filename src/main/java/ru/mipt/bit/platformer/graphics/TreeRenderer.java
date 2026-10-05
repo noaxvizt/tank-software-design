@@ -6,16 +6,17 @@ import ru.mipt.bit.platformer.model.Tree;
 public class TreeRenderer extends GameObjectRenderer {
 
     private final Tree tree;
-    private final GameFieldRenderer fieldRenderer;
+    private final TilePositioner tilePositioner;
 
-    public TreeRenderer(String textureFile, Tree tree, GameFieldRenderer fieldRenderer) {
+    public TreeRenderer(String textureFile, Tree tree, TilePositioner tilePositioner) {
         super(textureFile);
         this.tree = tree;
-        this.fieldRenderer = fieldRenderer;
+        this.tilePositioner = tilePositioner;
     }
 
+    @Override
     public void render(Batch batch) {
-        fieldRenderer.moveAtTileCenter(rectangle, tree.getCoordinates());
+        tilePositioner.moveAtTileCenter(rectangle, tree.getCoordinates());
         draw(batch, 0f);
     }
 }

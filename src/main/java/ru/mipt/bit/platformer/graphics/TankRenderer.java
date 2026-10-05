@@ -6,16 +6,17 @@ import ru.mipt.bit.platformer.model.Tank;
 public class TankRenderer extends GameObjectRenderer {
 
     private final Tank tank;
-    private final GameFieldRenderer fieldRenderer;
+    private final TilePositioner tilePositioner;
 
-    public TankRenderer(String textureFile, Tank tank, GameFieldRenderer fieldRenderer) {
+    public TankRenderer(String textureFile, Tank tank, TilePositioner tilePositioner) {
         super(textureFile);
         this.tank = tank;
-        this.fieldRenderer = fieldRenderer;
+        this.tilePositioner = tilePositioner;
     }
 
+    @Override
     public void render(Batch batch) {
-        fieldRenderer.moveBetweenTileCenters(
+        tilePositioner.moveBetweenTileCenters(
                 rectangle,
                 tank.getCoordinates(),
                 tank.getDestinationCoordinates(),
