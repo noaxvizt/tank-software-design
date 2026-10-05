@@ -1,11 +1,12 @@
 package ru.mipt.bit.platformer.input;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.Test;
+import ru.mipt.bit.platformer.model.Direction;
 import ru.mipt.bit.platformer.model.GameField;
 import ru.mipt.bit.platformer.model.Tank;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,12 +15,17 @@ import static org.junit.Assert.assertEquals;
 public class TankMovementInputHandlerTest {
 
     @Test
-    public void shouldMoveTankByArrowKey() {
+    public void shouldMoveTankByConfiguredKey() {
         TestKeyboard keyboard = new TestKeyboard();
-        keyboard.press(Input.Keys.RIGHT);
+        keyboard.press(1);
         Tank tank = new Tank(new GridPoint2(1, 1), 0.4f);
         GameField field = new GameField(5, 5);
-        TankMovementInputHandler handler = new TankMovementInputHandler(keyboard, tank, field);
+        TankMovementInputHandler handler = new TankMovementInputHandler(
+                keyboard,
+                tank,
+                field,
+                Collections.singletonMap(1, Direction.RIGHT)
+        );
 
         handler.handle();
 
@@ -27,16 +33,21 @@ public class TankMovementInputHandlerTest {
     }
 
     @Test
-    public void shouldMoveTankByWasdKey() {
+    public void shouldIgnoreKeyWithoutDirection() {
         TestKeyboard keyboard = new TestKeyboard();
-        keyboard.press(Input.Keys.W);
+        keyboard.press(2);
         Tank tank = new Tank(new GridPoint2(1, 1), 0.4f);
         GameField field = new GameField(5, 5);
-        TankMovementInputHandler handler = new TankMovementInputHandler(keyboard, tank, field);
+        TankMovementInputHandler handler = new TankMovementInputHandler(
+                keyboard,
+                tank,
+                field,
+                Collections.singletonMap(1, Direction.UP)
+        );
 
         handler.handle();
 
-        assertEquals(new GridPoint2(1, 2), tank.getDestinationCoordinates());
+        assertEquals(new GridPoint2(1, 1), tank.getDestinationCoordinates());
     }
 
     private static class TestKeyboard implements Keyboard {

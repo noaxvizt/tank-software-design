@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GameField {
+public class GameField implements MovementArea {
 
     private final int width;
     private final int height;
@@ -20,6 +20,7 @@ public class GameField {
         occupiedTiles.add(new GridPoint2(coordinates));
     }
 
+    @Override
     public boolean canMoveTo(GridPoint2 coordinates) {
         return isInside(coordinates) && !occupiedTiles.contains(coordinates);
     }

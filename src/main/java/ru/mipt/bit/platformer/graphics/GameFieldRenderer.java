@@ -15,7 +15,7 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.createSingleLayerMapRende
 import static ru.mipt.bit.platformer.util.GdxGameUtils.getSingleLayer;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.moveRectangleAtTileCenter;
 
-public class GameFieldRenderer implements Disposable {
+public class GameFieldRenderer implements Disposable, TilePositioner {
 
     private final TiledMap level;
     private final TiledMapTileLayer groundLayer;
@@ -37,10 +37,12 @@ public class GameFieldRenderer implements Disposable {
         return groundLayer.getHeight();
     }
 
+    @Override
     public void moveAtTileCenter(Rectangle rectangle, GridPoint2 coordinates) {
         moveRectangleAtTileCenter(groundLayer, rectangle, coordinates);
     }
 
+    @Override
     public void moveBetweenTileCenters(Rectangle rectangle, GridPoint2 fromCoordinates,
                                        GridPoint2 toCoordinates, float progress) {
         movement.moveRectangleBetweenTileCenters(rectangle, fromCoordinates, toCoordinates, progress);
