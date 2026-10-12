@@ -3,10 +3,13 @@ package ru.mipt.bit.platformer;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.configuration.GdxGameFactory;
+import ru.mipt.bit.platformer.level.FileLevelProvider;
+import ru.mipt.bit.platformer.level.LevelProvider;
+import ru.mipt.bit.platformer.level.RandomLevelProvider;
 import ru.mipt.bit.platformer.model.Direction;
 
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -20,13 +23,19 @@ public class GameDesktopLauncher {
                 "level.tmx",
                 "images/tank_blue.png",
                 "images/greenTree.png",
-                new GridPoint2(1, 1),
-                new GridPoint2(1, 3),
+                createLevelProvider(args),
                 0.4f,
                 createControls()
         );
 
         new Lwjgl3Application(new TankGame(gameFactory), config);
+    }
+
+    private static LevelProvider createLevelProvider(String[] args) {
+        if (args.length > 0 && args[0].equals("random")) {
+            return new RandomLevelProvider(12);
+        }
+        return new FileLevelProvider(Paths.get("src/main/resources/game-level.txt"));
     }
 
     private static Map<Integer, Direction> createControls() {
