@@ -9,6 +9,19 @@ apply from: 'versions.gradle'
 group 'ru.mipt.bit'
 version '1.0-SNAPSHOT'
 
+def lwjglVersion = '3.3.3'
+def architecture = System.getProperty('os.arch')
+def isArm = architecture == 'aarch64' || architecture == 'arm64'
+def lwjglNatives
+
+if (Os.isFamily(Os.FAMILY_MAC)) {
+    lwjglNatives = isArm ? 'natives-macos-arm64' : 'natives-macos'
+} else if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+    lwjglNatives = isArm ? 'natives-windows-arm64' : 'natives-windows'
+} else {
+    lwjglNatives = isArm ? 'natives-linux-arm64' : 'natives-linux'
+}
+
 application {
     mainClassName = 'ru.mipt.bit.platformer.GameDesktopLauncher'
     if (Os.isFamily(Os.FAMILY_MAC)) {
@@ -24,4 +37,13 @@ dependencies {
     implementation deps.gdx.gdx
     implementation deps.gdx.backend_lwjgl3
     implementation deps.gdx.platform_desktop
+
+    runtimeOnly "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-jemalloc:$lwjglVersion:$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-openal:$lwjglVersion:$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
+
+    testImplementation 'junit:junit:4.13.2'
 }
