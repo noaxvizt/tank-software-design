@@ -12,9 +12,9 @@ public class TankTest {
     @Test
     public void shouldMoveToNextTile() {
         GameField field = new GameField(5, 5);
-        Tank tank = new Tank(new GridPoint2(1, 1), 0.4f);
+        Tank tank = new Tank(new GridPoint2(1, 1), 0.4f, field);
 
-        tank.tryMove(Direction.RIGHT, field);
+        tank.tryMove(Direction.RIGHT);
 
         assertEquals(new GridPoint2(2, 1), tank.getDestinationCoordinates());
         assertEquals(0f, tank.getMovementProgress(), 0f);
@@ -33,9 +33,9 @@ public class TankTest {
     public void shouldNotMoveToObstacle() {
         GameField field = new GameField(5, 5);
         field.addObstacle(new GridPoint2(1, 2));
-        Tank tank = new Tank(new GridPoint2(1, 1), 0.4f);
+        Tank tank = new Tank(new GridPoint2(1, 1), 0.4f, field);
 
-        tank.tryMove(Direction.UP, field);
+        tank.tryMove(Direction.UP);
 
         assertEquals(new GridPoint2(1, 1), tank.getDestinationCoordinates());
         assertEquals(90f, tank.getRotation(), 0f);
@@ -45,12 +45,36 @@ public class TankTest {
     @Test
     public void shouldNotChangeDirectionWhileMoving() {
         GameField field = new GameField(5, 5);
-        Tank tank = new Tank(new GridPoint2(1, 1), 0.4f);
+        Tank tank = new Tank(new GridPoint2(1, 1), 0.4f, field);
 
-        tank.tryMove(Direction.RIGHT, field);
-        tank.tryMove(Direction.UP, field);
+        tank.tryMove(Direction.RIGHT);
+        tank.tryMove(Direction.UP);
 
         assertEquals(new GridPoint2(2, 1), tank.getDestinationCoordinates());
         assertEquals(0f, tank.getRotation(), 0f);
+    }
+
+    @Test
+    public void shouldNotMoveOutsideField() {
+        GameField field = new GameField(5, 5);
+        Tank tank = new Tank(new GridPoint2(0, 0), 0.4f, field);
+
+        tank.tryMove(Direction.LEFT);
+
+        assertEquals(new GridPoint2(0, 0), tank.getDestinationCoordinates());
+        assertTrue(tank.isIdle());
+    }
+
+    @Test
+    public void shouldNotMoveToAnotherTank() {
+        GameField field = new GameField(5, 5);
+        Tank firstTank = new Tank(new GridPoint2(1, 1), 0.4f, field);
+        Tank secondTank = new Tank(new GridPoint2(3, 1), 0.4f, field);
+
+        firstTank.tryMove(Direction.RIGHT);
+        secondTank.tryMove(Direction.LEFT);
+
+        assertEquals(new GridPoint2(2, 1), firstTank.getDestinationCoordinates());
+        assertEquals(new GridPoint2(3, 1), secondTank.getDestinationCoordinates());
     }
 }

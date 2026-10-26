@@ -24,6 +24,7 @@ public class GameDesktopLauncher {
                 "images/tank_blue.png",
                 "images/greenTree.png",
                 createLevelProvider(args),
+                4,
                 0.4f,
                 createControls()
         );

@@ -3,6 +3,7 @@ package ru.mipt.bit.platformer;
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.Test;
 import ru.mipt.bit.platformer.model.Direction;
+import ru.mipt.bit.platformer.model.GameField;
 import ru.mipt.bit.platformer.model.Tank;
 
 import java.util.Collections;
@@ -13,8 +14,9 @@ public class GameControllerTest {
 
     @Test
     public void shouldHandleInputUpdateTankAndRender() {
-        Tank tank = new Tank(new GridPoint2(1, 1), 1f);
-        GameInput inputHandler = () -> tank.tryMove(Direction.RIGHT, coordinates -> true);
+        GameField field = new GameField(5, 5);
+        Tank tank = new Tank(new GridPoint2(1, 1), 1f, field);
+        GameInput inputHandler = () -> tank.tryMove(Direction.RIGHT);
         TestRenderer renderer = new TestRenderer();
         GameController game = new GameController(
                 Collections.singletonList(tank), inputHandler, renderer
@@ -29,7 +31,8 @@ public class GameControllerTest {
 
     @Test
     public void shouldDisposeRenderer() {
-        Tank tank = new Tank(new GridPoint2(1, 1), 1f);
+        GameField field = new GameField(5, 5);
+        Tank tank = new Tank(new GridPoint2(1, 1), 1f, field);
         TestRenderer renderer = new TestRenderer();
         GameController game = new GameController(
                 Collections.singletonList(tank), () -> { }, renderer
