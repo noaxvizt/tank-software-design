@@ -2,11 +2,11 @@ package ru.mipt.bit.platformer;
 
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.Test;
+import ru.mipt.bit.platformer.command.CommandQueue;
+import ru.mipt.bit.platformer.command.MoveTankCommand;
+import ru.mipt.bit.platformer.level.GameLevel;
 import ru.mipt.bit.platformer.model.Direction;
-import ru.mipt.bit.platformer.model.GameField;
 import ru.mipt.bit.platformer.model.Tank;
-
-import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,13 +14,15 @@ public class GameControllerTest {
 
     @Test
     public void shouldHandleInputUpdateTankAndRender() {
-        GameField field = new GameField(5, 5);
-        Tank tank = new Tank(new GridPoint2(1, 1), 1f, field);
-        GameInput inputHandler = () -> tank.tryMove(Direction.RIGHT);
-        TestRenderer renderer = new TestRenderer();
-        GameController game = new GameController(
-                Collections.singletonList(tank), inputHandler, renderer
+        GameLevel level = new GameLevel(5, 5);
+        Tank tank = new Tank(new GridPoint2(1, 1), 1f, level);
+        level.addObject(tank);
+        CommandQueue commandQueue = new CommandQueue();
+        GameInput inputHandler = () -> commandQueue.add(
+                new MoveTankCommand(tank, Direction.RIGHT)
         );
+        TestRenderer renderer = new TestRenderer();
+        GameController game = new GameController(level, inputHandler, commandQueue, renderer);
 
         game.update(0.5f);
 
@@ -31,12 +33,10 @@ public class GameControllerTest {
 
     @Test
     public void shouldDisposeRenderer() {
-        GameField field = new GameField(5, 5);
-        Tank tank = new Tank(new GridPoint2(1, 1), 1f, field);
+        GameLevel level = new GameLevel(5, 5);
+        CommandQueue commandQueue = new CommandQueue();
         TestRenderer renderer = new TestRenderer();
-        GameController game = new GameController(
-                Collections.singletonList(tank), () -> { }, renderer
-        );
+        GameController game = new GameController(level, () -> { }, commandQueue, renderer);
 
         game.dispose();
 

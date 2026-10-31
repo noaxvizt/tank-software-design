@@ -2,6 +2,7 @@ package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.Test;
+import ru.mipt.bit.platformer.level.GameLevel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -76,5 +77,32 @@ public class TankTest {
 
         assertEquals(new GridPoint2(2, 1), firstTank.getDestinationCoordinates());
         assertEquals(new GridPoint2(3, 1), secondTank.getDestinationCoordinates());
+    }
+
+    @Test
+    public void shouldCreateBulletInCurrentDirection() {
+        GameLevel level = new GameLevel(5, 5);
+        Tank tank = new Tank(new GridPoint2(1, 1), 0.4f, level, level);
+        level.addObject(tank);
+
+        tank.shoot();
+
+        Bullet bullet = (Bullet) level.getObjects().get(1);
+        assertEquals(new GridPoint2(2, 1), bullet.getCoordinates());
+    }
+
+    @Test
+    public void shouldLoseHealth() {
+        GameField field = new GameField(5, 5);
+        Tank tank = new Tank(new GridPoint2(1, 1), 0.4f, field);
+
+        tank.takeDamage(2);
+
+        assertEquals(1, tank.getHealth());
+        assertTrue(tank.isAlive());
+
+        tank.takeDamage(1);
+
+        assertFalse(tank.isAlive());
     }
 }

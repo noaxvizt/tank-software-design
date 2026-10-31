@@ -11,4 +11,6 @@ public interface MovementArea {
     boolean tryStartMovement(GridPoint2 fromCoordinates, GridPoint2 toCoordinates);
 
     void finishMovement(GridPoint2 fromCoordinates);
+
+    void removeTank(GridPoint2 coordinates);
 }

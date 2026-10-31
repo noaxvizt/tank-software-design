@@ -2,7 +2,7 @@ package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
 
-public class Tree {
+public class Tree implements LevelObject {
 
     private final GridPoint2 coordinates;
 
@@ -14,4 +14,7 @@ public class Tree {
         return new GridPoint2(coordinates);
     }
 
+    @Override
+    public void update(float deltaTime) {
+    }
 }

@@ -21,6 +21,10 @@ public class GameField implements MovementArea {
         occupiedTiles.add(new GridPoint2(coordinates));
     }
 
+    public void removeObstacle(GridPoint2 coordinates) {
+        occupiedTiles.remove(coordinates);
+    }
+
     @Override
     public boolean canMoveTo(GridPoint2 coordinates) {
         return isInside(coordinates)
@@ -50,7 +54,12 @@ public class GameField implements MovementArea {
         tankTiles.remove(fromCoordinates);
     }
 
-    private boolean isInside(GridPoint2 coordinates) {
+    @Override
+    public void removeTank(GridPoint2 coordinates) {
+        tankTiles.remove(coordinates);
+    }
+
+    public boolean isInside(GridPoint2 coordinates) {
         return coordinates.x >= 0
                 && coordinates.x < width
                 && coordinates.y >= 0

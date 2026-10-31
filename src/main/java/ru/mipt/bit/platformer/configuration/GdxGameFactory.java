@@ -1,6 +1,7 @@
 package ru.mipt.bit.platformer.configuration;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.GridPoint2;
@@ -9,22 +10,18 @@ import ru.mipt.bit.platformer.Game;
 import ru.mipt.bit.platformer.GameController;
 import ru.mipt.bit.platformer.GameFactory;
 import ru.mipt.bit.platformer.GameInput;
-import ru.mipt.bit.platformer.GameRenderer;
-import ru.mipt.bit.platformer.Updatable;
+import ru.mipt.bit.platformer.command.CommandQueue;
 import ru.mipt.bit.platformer.graphics.GameFieldRenderer;
 import ru.mipt.bit.platformer.graphics.GdxGameRenderer;
-import ru.mipt.bit.platformer.graphics.ObjectRenderer;
-import ru.mipt.bit.platformer.graphics.TankRenderer;
-import ru.mipt.bit.platformer.graphics.TreeRenderer;
 import ru.mipt.bit.platformer.input.InputHandler;
 import ru.mipt.bit.platformer.input.Keyboard;
 import ru.mipt.bit.platformer.input.TankController;
 import ru.mipt.bit.platformer.input.keyboard.GdxKeyboard;
 import ru.mipt.bit.platformer.level.Level;
+import ru.mipt.bit.platformer.level.GameLevel;
 import ru.mipt.bit.platformer.level.LevelProvider;
 import ru.mipt.bit.platformer.level.RandomTankGenerator;
 import ru.mipt.bit.platformer.model.Direction;
-import ru.mipt.bit.platformer.model.GameField;
 import ru.mipt.bit.platformer.model.Tank;
 import ru.mipt.bit.platformer.model.Tree;
 import ru.mipt.bit.platformer.strategy.KeyboardMovementStrategy;
@@ -34,6 +31,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class GdxGameFactory implements GameFactory {
 
@@ -63,59 +61,68 @@ public class GdxGameFactory implements GameFactory {
         Batch batch = new SpriteBatch();
         GameFieldRenderer fieldRenderer = new GameFieldRenderer(levelFile, batch, Interpolation.smooth);
 
-        GameField field = new GameField(fieldRenderer.getWidth(), fieldRenderer.getHeight());
+        GameLevel gameLevel = new GameLevel(fieldRenderer.getWidth(), fieldRenderer.getHeight());
         Level level = levelProvider.createLevel(fieldRenderer.getWidth(), fieldRenderer.getHeight());
 
-        List<Tree> trees = new ArrayList<>();
+        GdxGameRenderer gameRenderer = new GdxGameRenderer(
+                batch,
+                fieldRenderer,
+                tankTexture,
+                treeTexture,
+                0f, 0f, 0.2f, 1f
+        );
+        gameLevel.addListener(gameRenderer);
+
         for (GridPoint2 coordinates : level.getTreeCoordinates()) {
             Tree tree = new Tree(coordinates);
-            trees.add(tree);
-            field.addObstacle(tree.getCoordinates());
+            gameLevel.addObject(tree);
         }
 
         List<Tank> tanks = new ArrayList<>();
-        Tank playerTank = new Tank(level.getTankCoordinates(), movementDuration, field);
+        Tank playerTank = new Tank(
+                level.getTankCoordinates(), movementDuration, gameLevel, gameLevel
+        );
         tanks.add(playerTank);
+        gameLevel.addObject(playerTank);
 
         RandomTankGenerator tankGenerator = new RandomTankGenerator(enemyTankCount);
         List<GridPoint2> enemyCoordinates = tankGenerator.generate(
-                field, fieldRenderer.getWidth(), fieldRenderer.getHeight()
+                gameLevel, fieldRenderer.getWidth(), fieldRenderer.getHeight()
         );
         for (GridPoint2 coordinates : enemyCoordinates) {
-            tanks.add(new Tank(coordinates, movementDuration, field));
+            Tank enemyTank = new Tank(coordinates, movementDuration, gameLevel, gameLevel);
+            tanks.add(enemyTank);
+            gameLevel.addObject(enemyTank);
         }
-
-        List<ObjectRenderer> objectRenderers = new ArrayList<>();
-        for (Tank tank : tanks) {
-            objectRenderers.add(new TankRenderer(tankTexture, tank, fieldRenderer));
-        }
-        for (Tree tree : trees) {
-            objectRenderers.add(new TreeRenderer(treeTexture, tree, fieldRenderer));
-        }
-
-        GameRenderer gameRenderer = new GdxGameRenderer(
-                batch,
-                fieldRenderer,
-                objectRenderers,
-                0f, 0f, 0.2f, 1f
-        );
 
         Keyboard keyboard = new GdxKeyboard(Gdx.input);
+        CommandQueue commandQueue = new CommandQueue();
         List<GameInput> tankControllers = new ArrayList<>();
         tankControllers.add(
-                new TankController(playerTank, new KeyboardMovementStrategy(keyboard, controls))
+                new TankController(
+                        playerTank,
+                        new KeyboardMovementStrategy(keyboard, controls),
+                        commandQueue,
+                        keyboard,
+                        Input.Keys.SPACE
+                )
         );
         for (int index = 1; index < tanks.size(); index++) {
-            tankControllers.add(new TankController(tanks.get(index), new RandomMovementStrategy()));
+            tankControllers.add(
+                    new TankController(
+                            tanks.get(index),
+                            new RandomMovementStrategy(),
+                            commandQueue,
+                            new Random()
+                    )
+            );
         }
         GameInput inputHandler = new InputHandler(tankControllers);
 
-        List<Updatable> updatableObjects = new ArrayList<>();
-        updatableObjects.addAll(tanks);
-
         return new GameController(
-                updatableObjects,
+                gameLevel,
                 inputHandler,
+                commandQueue,
                 gameRenderer
         );
     }
