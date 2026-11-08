@@ -96,12 +96,15 @@ public class TankTest {
         GameField field = new GameField(5, 5);
         Tank tank = new Tank(new GridPoint2(1, 1), 0.4f, field);
 
+        assertEquals(100, tank.getHealth());
+
         tank.takeDamage(2);
 
-        assertEquals(1, tank.getHealth());
+        assertEquals(98, tank.getHealth());
+        assertEquals(100, tank.getMaxHealth());
         assertTrue(tank.isAlive());
 
-        tank.takeDamage(1);
+        tank.takeDamage(98);
 
         assertFalse(tank.isAlive());
     }

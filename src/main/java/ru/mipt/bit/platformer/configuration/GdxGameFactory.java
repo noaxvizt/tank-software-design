@@ -13,6 +13,7 @@ import ru.mipt.bit.platformer.GameInput;
 import ru.mipt.bit.platformer.command.CommandQueue;
 import ru.mipt.bit.platformer.graphics.GameFieldRenderer;
 import ru.mipt.bit.platformer.graphics.GdxGameRenderer;
+import ru.mipt.bit.platformer.input.HealthBarInputHandler;
 import ru.mipt.bit.platformer.input.InputHandler;
 import ru.mipt.bit.platformer.input.Keyboard;
 import ru.mipt.bit.platformer.input.TankController;
@@ -117,6 +118,14 @@ public class GdxGameFactory implements GameFactory {
                     )
             );
         }
+        tankControllers.add(
+                new HealthBarInputHandler(
+                        keyboard,
+                        Input.Keys.L,
+                        commandQueue,
+                        gameRenderer
+                )
+        );
         GameInput inputHandler = new InputHandler(tankControllers);
 
         return new GameController(

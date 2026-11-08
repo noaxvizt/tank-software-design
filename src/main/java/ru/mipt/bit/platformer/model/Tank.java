@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.GridPoint2;
 
 public class Tank implements LevelObject {
 
+    private static final int MAX_HEALTH = 100;
+
     private final GridPoint2 coordinates;
     private final GridPoint2 destinationCoordinates;
     private final float movementDuration;
@@ -13,7 +15,7 @@ public class Tank implements LevelObject {
     private float movementProgress = 1f;
     private float shootingDelay;
     private Direction direction = Direction.RIGHT;
-    private int health = 3;
+    private int health = MAX_HEALTH;
 
     public Tank(GridPoint2 initialCoordinates, float movementDuration, MovementArea movementArea) {
         this(initialCoordinates, movementDuration, movementArea, null);
@@ -49,7 +51,7 @@ public class Tank implements LevelObject {
         }
 
         Bullet bullet = new Bullet(
-                direction.nextTileFrom(coordinates), direction, 0.1f, 1, bulletArea
+                direction.nextTileFrom(coordinates), direction, 0.1f, 25, bulletArea
         );
         bulletArea.addBullet(bullet);
         shootingDelay = 0.5f;
@@ -97,6 +99,10 @@ public class Tank implements LevelObject {
 
     public int getHealth() {
         return health;
+    }
+
+    public int getMaxHealth() {
+        return MAX_HEALTH;
     }
 
     public boolean isAlive() {

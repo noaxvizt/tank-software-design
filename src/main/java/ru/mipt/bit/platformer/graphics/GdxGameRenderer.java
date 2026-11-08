@@ -14,7 +14,7 @@ import java.util.Map;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
-public class GdxGameRenderer implements GameRenderer, GameLevelListener {
+public class GdxGameRenderer implements GameRenderer, GameLevelListener, HealthBarDisplay {
 
     private final Batch batch;
     private final GameFieldRenderer fieldRenderer;
@@ -25,6 +25,8 @@ public class GdxGameRenderer implements GameRenderer, GameLevelListener {
     private final float green;
     private final float blue;
     private final float alpha;
+
+    private boolean healthBarsVisible;
 
     public GdxGameRenderer(Batch batch, GameFieldRenderer fieldRenderer,
                            String tankTexture, String treeTexture,
@@ -65,7 +67,14 @@ public class GdxGameRenderer implements GameRenderer, GameLevelListener {
     public void objectAdded(LevelObject object) {
         ObjectRenderer objectRenderer = null;
         if (object instanceof Tank) {
-            objectRenderer = new TankRenderer(tankTexture, (Tank) object, fieldRenderer);
+            Tank tank = (Tank) object;
+            HealthBarRendererDecorator decorator = new HealthBarRendererDecorator(
+                    new TankRenderer(tankTexture, tank, fieldRenderer),
+                    tank,
+                    fieldRenderer
+            );
+            decorator.setVisible(healthBarsVisible);
+            objectRenderer = decorator;
         } else if (object instanceof Tree) {
             objectRenderer = new TreeRenderer(treeTexture, (Tree) object, fieldRenderer);
         } else if (object instanceof Bullet) {
@@ -82,6 +91,16 @@ public class GdxGameRenderer implements GameRenderer, GameLevelListener {
         ObjectRenderer objectRenderer = objectRenderers.remove(object);
         if (objectRenderer != null) {
             objectRenderer.dispose();
+        }
+    }
+
+    @Override
+    public void toggleHealthBars() {
+        healthBarsVisible = !healthBarsVisible;
+        for (ObjectRenderer objectRenderer : objectRenderers.values()) {
+            if (objectRenderer instanceof HealthBarRendererDecorator) {
+                ((HealthBarRendererDecorator) objectRenderer).setVisible(healthBarsVisible);
+            }
         }
     }
 }

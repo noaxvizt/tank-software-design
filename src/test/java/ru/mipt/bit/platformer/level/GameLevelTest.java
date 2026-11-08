@@ -54,7 +54,7 @@ public class GameLevelTest {
 
         shooter.shoot();
 
-        assertEquals(2, target.getHealth());
+        assertEquals(75, target.getHealth());
         assertEquals(2, level.getObjects().size());
     }
 
@@ -66,7 +66,7 @@ public class GameLevelTest {
         level.addObject(shooter);
         level.addObject(target);
 
-        for (int shot = 0; shot < 3; shot++) {
+        for (int shot = 0; shot < 4; shot++) {
             shooter.shoot();
             shooter.update(0.5f);
         }
@@ -105,7 +105,7 @@ public class GameLevelTest {
         tank.tryMove(Direction.RIGHT);
         level.update(0f);
 
-        assertEquals(2, tank.getHealth());
+        assertEquals(99, tank.getHealth());
         assertFalse(level.getObjects().contains(bullet));
     }
 
