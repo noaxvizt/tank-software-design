@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/** Application service that combines input handlers. */
 public class InputHandler implements GameInput {
 
     private final List<GameInput> inputHandlers;

@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import java.util.HashSet;
 import java.util.Set;
 
+/** Domain service that stores occupied tiles. */
 public class GameField implements MovementArea {
 
     private final int width;

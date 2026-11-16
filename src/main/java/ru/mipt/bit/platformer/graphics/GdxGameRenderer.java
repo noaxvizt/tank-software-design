@@ -14,6 +14,7 @@ import java.util.Map;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
+/** Infrastructure adapter for game rendering and level events. */
 public class GdxGameRenderer implements GameRenderer, GameLevelListener, HealthBarDisplay {
 
     private final Batch batch;

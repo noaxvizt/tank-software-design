@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/** Domain service that chooses free tiles for tanks. */
 public class RandomTankGenerator {
 
     private final int tankCount;

@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Infrastructure adapter that loads a level from a file. */
 public class FileLevelProvider implements LevelProvider {
 
     private final Path file;

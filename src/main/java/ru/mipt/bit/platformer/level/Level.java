@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/** Domain value object with initial level data. */
 public class Level {
 
     private final GridPoint2 tankCoordinates;

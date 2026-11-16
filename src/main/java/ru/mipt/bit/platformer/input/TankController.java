@@ -11,6 +11,7 @@ import ru.mipt.bit.platformer.strategy.TankMovementStrategy;
 
 import java.util.Random;
 
+/** Application adapter that converts controls into commands. */
 public class TankController implements GameInput {
 
     private final Tank tank;

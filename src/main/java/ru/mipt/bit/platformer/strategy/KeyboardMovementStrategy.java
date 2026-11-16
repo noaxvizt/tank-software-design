@@ -6,6 +6,7 @@ import ru.mipt.bit.platformer.model.Direction;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/** Application policy for player movement. */
 public class KeyboardMovementStrategy implements TankMovementStrategy {
 
     private final Keyboard keyboard;

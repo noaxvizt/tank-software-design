@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/** Domain service and adapter for movement and bullet ports. */
 public class GameLevel implements Updatable, MovementArea, BulletArea {
 
     private final GameField field;

@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/** Infrastructure adapter that creates the libGDX game. */
 public class GdxGameFactory implements GameFactory {
 
     private final String levelFile;

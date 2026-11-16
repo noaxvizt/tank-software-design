@@ -3,6 +3,7 @@ package ru.mipt.bit.platformer.command;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Application service that executes commands. */
 public class CommandQueue {
 
     private final List<Command> commands = new ArrayList<>();

@@ -3,6 +3,7 @@ package ru.mipt.bit.platformer.graphics;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import ru.mipt.bit.platformer.model.Tank;
 
+/** Infrastructure adapter for rendering a tank. */
 public class TankRenderer extends GameObjectRenderer {
 
     private final Tank tank;

@@ -3,6 +3,7 @@ package ru.mipt.bit.platformer.graphics;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import ru.mipt.bit.platformer.model.Tree;
 
+/** Infrastructure adapter for rendering a tree. */
 public class TreeRenderer extends GameObjectRenderer {
 
     private final Tree tree;

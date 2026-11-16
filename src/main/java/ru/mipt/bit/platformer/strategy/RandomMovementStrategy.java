@@ -4,6 +4,7 @@ import ru.mipt.bit.platformer.model.Direction;
 
 import java.util.Random;
 
+/** Application policy for AI movement. */
 public class RandomMovementStrategy implements TankMovementStrategy {
 
     private final Random random;

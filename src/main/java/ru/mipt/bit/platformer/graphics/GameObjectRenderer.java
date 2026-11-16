@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.createBoundingRectangle;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.drawTextureRegionUnscaled;
 
+/** Infrastructure base class for texture renderers. */
 public abstract class GameObjectRenderer implements ObjectRenderer {
 
     private final Texture texture;

@@ -2,6 +2,7 @@ package ru.mipt.bit.platformer;
 
 import ru.mipt.bit.platformer.command.CommandQueue;
 
+/** Application service that runs one game cycle. */
 public class GameController implements Game {
 
     private final Updatable logicalLevel;

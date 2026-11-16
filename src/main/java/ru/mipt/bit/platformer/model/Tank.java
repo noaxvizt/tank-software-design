@@ -1,7 +1,12 @@
 package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.state.HeavyTankState;
+import ru.mipt.bit.platformer.model.state.LightTankState;
+import ru.mipt.bit.platformer.model.state.MediumTankState;
+import ru.mipt.bit.platformer.model.state.TankState;
 
+/** Domain entity that represents a tank. */
 public class Tank implements LevelObject {
 
     private static final int MAX_HEALTH = 100;
@@ -16,6 +21,7 @@ public class Tank implements LevelObject {
     private float shootingDelay;
     private Direction direction = Direction.RIGHT;
     private int health = MAX_HEALTH;
+    private TankState state = new LightTankState();
 
     public Tank(GridPoint2 initialCoordinates, float movementDuration, MovementArea movementArea) {
         this(initialCoordinates, movementDuration, movementArea, null);
@@ -46,7 +52,8 @@ public class Tank implements LevelObject {
     }
 
     public void shoot() {
-        if (!isIdle() || !isAlive() || bulletArea == null || shootingDelay > 0f) {
+        if (!isIdle() || !isAlive() || bulletArea == null || shootingDelay > 0f
+                || !state.canShoot()) {
             return;
         }
 
@@ -54,13 +61,17 @@ public class Tank implements LevelObject {
                 direction.nextTileFrom(coordinates), direction, 0.1f, 25, bulletArea
         );
         bulletArea.addBullet(bullet);
-        shootingDelay = 0.5f;
+        shootingDelay = state.getShootingDelay(0.5f);
     }
 
     @Override
     public void update(float deltaTime) {
         shootingDelay = Math.max(shootingDelay - deltaTime, 0f);
-        movementProgress = Math.min(movementProgress + deltaTime / movementDuration, 1f);
+        float currentMovementDuration = state.getMovementDuration(movementDuration);
+        movementProgress = Math.min(
+                movementProgress + deltaTime / currentMovementDuration,
+                1f
+        );
         if (isIdle() && !coordinates.equals(destinationCoordinates)) {
             GridPoint2 previousCoordinates = new GridPoint2(coordinates);
             coordinates.set(destinationCoordinates);
@@ -95,6 +106,7 @@ public class Tank implements LevelObject {
 
     public void takeDamage(int damage) {
         health -= damage;
+        updateState();
     }
 
     public int getHealth() {
@@ -111,5 +123,20 @@ public class Tank implements LevelObject {
 
     public boolean isIdle() {
         return movementProgress == 1f;
+    }
+
+    public TankState getState() {
+        return state;
+    }
+
+    private void updateState() {
+        int healthPercent = health * 100 / MAX_HEALTH;
+        if (healthPercent > 70) {
+            state = new LightTankState();
+        } else if (healthPercent >= 15) {
+            state = new MediumTankState();
+        } else {
+            state = new HeavyTankState();
+        }
     }
 }

@@ -2,6 +2,7 @@ package ru.mipt.bit.platformer.command;
 
 import ru.mipt.bit.platformer.model.Tank;
 
+/** Application use case for shooting. */
 public class ShootTankCommand implements Command {
 
     private final Tank tank;

@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/** Infrastructure composition root. */
 public class GameDesktopLauncher {
 
     public static void main(String[] args) {

@@ -15,6 +15,7 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.createSingleLayerMapRende
 import static ru.mipt.bit.platformer.util.GdxGameUtils.getSingleLayer;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.moveRectangleAtTileCenter;
 
+/** Infrastructure adapter for the tiled map. */
 public class GameFieldRenderer implements Disposable, TilePositioner {
 
     private final TiledMap level;

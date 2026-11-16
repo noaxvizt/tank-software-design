@@ -3,6 +3,9 @@ package ru.mipt.bit.platformer.model;
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.Test;
 import ru.mipt.bit.platformer.level.GameLevel;
+import ru.mipt.bit.platformer.model.state.HeavyTankState;
+import ru.mipt.bit.platformer.model.state.LightTankState;
+import ru.mipt.bit.platformer.model.state.MediumTankState;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -107,5 +110,60 @@ public class TankTest {
         tank.takeDamage(98);
 
         assertFalse(tank.isAlive());
+    }
+
+    @Test
+    public void shouldChangeStateDependingOnHealth() {
+        GameField field = new GameField(10, 10);
+        Tank lightTank = new Tank(new GridPoint2(1, 1), 0.6f, field);
+        Tank mediumTank = new Tank(new GridPoint2(3, 1), 0.6f, field);
+        Tank mediumBoundaryTank = new Tank(new GridPoint2(5, 1), 0.6f, field);
+        Tank heavyTank = new Tank(new GridPoint2(7, 1), 0.6f, field);
+
+        lightTank.takeDamage(29);
+        mediumTank.takeDamage(30);
+        mediumBoundaryTank.takeDamage(85);
+        heavyTank.takeDamage(86);
+
+        assertTrue(lightTank.getState() instanceof LightTankState);
+        assertTrue(mediumTank.getState() instanceof MediumTankState);
+        assertTrue(mediumBoundaryTank.getState() instanceof MediumTankState);
+        assertTrue(heavyTank.getState() instanceof HeavyTankState);
+    }
+
+    @Test
+    public void shouldMoveSlowerAfterDamage() {
+        GameField field = new GameField(5, 5);
+        Tank tank = new Tank(new GridPoint2(1, 1), 0.6f, field);
+        tank.takeDamage(30);
+
+        tank.tryMove(Direction.RIGHT);
+        tank.update(0.3f);
+
+        assertEquals(0.25f, tank.getMovementProgress(), 0.001f);
+    }
+
+    @Test
+    public void shouldMoveThreeTimesSlowerInHeavyState() {
+        GameField field = new GameField(5, 5);
+        Tank tank = new Tank(new GridPoint2(1, 1), 0.6f, field);
+        tank.takeDamage(86);
+
+        tank.tryMove(Direction.RIGHT);
+        tank.update(0.3f);
+
+        assertEquals(1f / 6f, tank.getMovementProgress(), 0.001f);
+    }
+
+    @Test
+    public void shouldNotShootInHeavyState() {
+        GameLevel level = new GameLevel(5, 5);
+        Tank tank = new Tank(new GridPoint2(1, 1), 0.4f, level, level);
+        level.addObject(tank);
+        tank.takeDamage(86);
+
+        tank.shoot();
+
+        assertEquals(1, level.getObjects().size());
     }
 }

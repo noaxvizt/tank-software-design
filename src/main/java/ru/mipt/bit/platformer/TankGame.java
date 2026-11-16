@@ -3,6 +3,7 @@ package ru.mipt.bit.platformer;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 
+/** Infrastructure adapter between libGDX and the game port. */
 public class TankGame implements ApplicationListener {
 
     private final GameFactory gameFactory;

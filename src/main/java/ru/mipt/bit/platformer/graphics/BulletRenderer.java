@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import ru.mipt.bit.platformer.model.Bullet;
 
+/** Infrastructure adapter for rendering a bullet. */
 public class BulletRenderer implements ObjectRenderer {
 
     private final Bullet bullet;

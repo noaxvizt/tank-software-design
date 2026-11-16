@@ -5,6 +5,7 @@ import ru.mipt.bit.platformer.command.CommandQueue;
 import ru.mipt.bit.platformer.command.ToggleHealthBarsCommand;
 import ru.mipt.bit.platformer.graphics.HealthBarDisplay;
 
+/** Application adapter for the health bar command. */
 public class HealthBarInputHandler implements GameInput {
 
     private final Keyboard keyboard;

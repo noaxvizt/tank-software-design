@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/** Infrastructure adapter that creates a random level. */
 public class RandomLevelProvider implements LevelProvider {
 
     private final int treeCount;

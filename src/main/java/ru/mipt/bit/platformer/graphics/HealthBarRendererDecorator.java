@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import ru.mipt.bit.platformer.model.Tank;
 
+/** Infrastructure adapter that decorates a tank renderer. */
 public class HealthBarRendererDecorator implements ObjectRenderer {
 
     private final ObjectRenderer objectRenderer;
